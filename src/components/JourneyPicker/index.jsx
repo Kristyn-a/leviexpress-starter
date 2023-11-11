@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import './style.css';
 
 const CityOptions = ({ cities }) => {
-  console.log(cities);
   return cities.map((city) => (
     <option key={city.code} value={city.code}>
       {city.name}
@@ -11,11 +10,9 @@ const CityOptions = ({ cities }) => {
 };
 
 const DatesOptions = ({ dates }) => {
-  console.log('Data: ');
-  console.log(dates);
   return dates.map((date) => (
-    <option key={date.dateBasic} value={date.dateCs}>
-      {date.dateBasic}
+    <option key={date.dateBasic} value={date.dateBasic}>
+      {date.dateCs}
     </option>
   ));
 };
@@ -55,14 +52,22 @@ export const JourneyPicker = ({ onJourneyChange }) => {
     fetchCities();
   }, []);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(
-      `Cesta z města: ${fromCity} do města: ${toCity} v čase ${date}`,
-    );
-    console.log(fromCity);
-    console.log(toCity);
-    console.log(date);
+    if (fromCity && toCity && date) {
+      const response = await fetch(
+        `https://apps.kodim.cz/daweb/leviexpress/api/journey?fromCity=${fromCity}&toCity=${toCity}&date=${date}`,
+      );
+      const data = await response.json();
+      onJourneyChange(data.results);
+      console.log(data.results);
+    }
+    // console.log(
+    //   `Cesta z města: ${fromCity} do města: ${toCity} v čase ${date}`,
+    // );
+    // console.log(fromCity);
+    // console.log(toCity);
+    // console.log(date);
   };
 
   return (
@@ -108,7 +113,12 @@ export const JourneyPicker = ({ onJourneyChange }) => {
             </select>
           </label>
           <div className="journey-picker__controls">
-            <button onClick={handleSubmit} className="btn" type="submit">
+            <button
+              disabled={!(fromCity && toCity && date)}
+              onClick={handleSubmit}
+              className="btn"
+              type="submit"
+            >
               Vyhledat spoj
             </button>
           </div>
