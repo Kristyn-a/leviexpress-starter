@@ -40,10 +40,7 @@ export const JourneyPicker = ({ onJourneyChange }) => (
           </select>
         </label>
         <div className="journey-picker__controls">
-          <button 
-            className="btn" 
-            type="submit"
-          > 
+          <button className="btn" type="submit">
             Vyhledat spoj
           </button>
         </div>
